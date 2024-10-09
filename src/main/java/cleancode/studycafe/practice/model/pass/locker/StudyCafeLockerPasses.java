@@ -1,4 +1,6 @@
-package cleancode.studycafe.practice.model;
+package cleancode.studycafe.practice.model.pass.locker;
+
+import cleancode.studycafe.practice.model.pass.StudyCafeSeatPass;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +17,7 @@ public class StudyCafeLockerPasses {
         return new StudyCafeLockerPasses(lockerPasses);
     }
 
-    public Optional<StudyCafeLockerPass> findLockerPassBy(StudyCafePass pass) {
+    public Optional<StudyCafeLockerPass> findLockerPassBy(StudyCafeSeatPass pass) {
         return lockerPasses.stream()
                 .filter(pass::isSameDurationType)
                 .findFirst();

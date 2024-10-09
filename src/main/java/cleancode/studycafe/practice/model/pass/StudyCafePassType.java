@@ -1,4 +1,4 @@
-package cleancode.studycafe.practice.model;
+package cleancode.studycafe.practice.model.pass;
 
 import java.util.Set;
 
