@@ -1,12 +1,12 @@
 package cleancode.studycafe.practice;
 
-import cleancode.studycafe.tobe.exception.AppException;
-import cleancode.studycafe.tobe.io.InputHandler;
-import cleancode.studycafe.tobe.io.OutputHandler;
-import cleancode.studycafe.tobe.io.StudyCafeFileHandler;
-import cleancode.studycafe.tobe.model.StudyCafeLockerPass;
-import cleancode.studycafe.tobe.model.StudyCafePass;
-import cleancode.studycafe.tobe.model.StudyCafePassType;
+import cleancode.studycafe.practice.exception.AppException;
+import cleancode.studycafe.practice.io.InputHandler;
+import cleancode.studycafe.practice.io.OutputHandler;
+import cleancode.studycafe.practice.io.StudyCafeFileHandler;
+import cleancode.studycafe.practice.model.StudyCafeLockerPass;
+import cleancode.studycafe.practice.model.StudyCafePass;
+import cleancode.studycafe.practice.model.StudyCafePassType;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,18 +37,6 @@ public class StudyCafePassMachine {
         }
     }
 
-    public boolean isStudyCafePassTypeHOURLY(StudyCafePassType studyCafePassType) {
-        return StudyCafePassType.HOURLY.equals(studyCafePassType);
-    }
-
-    public boolean isStudyCafePassTypeWEEKLY(StudyCafePassType studyCafePassType) {
-        return StudyCafePassType.WEEKLY.equals(studyCafePassType);
-    }
-
-    public boolean isStudyCafePassTypeFIXED(StudyCafePassType studyCafePassType) {
-        return StudyCafePassType.FIXED.equals(studyCafePassType);
-    }
-
     private StudyCafePass selectPass() {
         outputHandler.askPassTypeSelection();
         StudyCafePassType passType = inputHandler.getPassTypeSelectingUserAction();
@@ -64,13 +52,13 @@ public class StudyCafePassMachine {
         List<StudyCafePass> allPasses = studyCafeFileHandler.readStudyCafePasses();
 
         return allPasses.stream()
-                .filter(studyCafePass -> studyCafePass.getPassType() == studyCafePassType)
+                .filter(studyCafePass -> studyCafePass.isSamePassType(studyCafePassType))
                 .toList();
     }
 
     private Optional<StudyCafeLockerPass> selectLockerPass(StudyCafePass selectedPass) {
 
-        if (selectedPass.getPassType() != StudyCafePassType.FIXED) {
+        if (selectedPass.cannotUseLocker()) {
             return Optional.empty();
         }
 
@@ -92,10 +80,7 @@ public class StudyCafePassMachine {
         List<StudyCafeLockerPass> allLockerPasses = studyCafeFileHandler.readLockerPasses();
 
         return allLockerPasses.stream()
-                .filter(lockerPass ->
-                        lockerPass.getPassType() == pass.getPassType()
-                                && lockerPass.getDuration() == pass.getDuration()
-                )
+                .filter(pass::isSameDurationType)
                 .findFirst()
                 .orElse(null);
     }
